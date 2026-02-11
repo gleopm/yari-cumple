@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Felices 24 Años ❤️</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Outfit:wght@300;500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* ========================================= */
+        /* === ESTILOS BASE DE LA PÁGINA (SLIDES 1-4) === */
+        /* ========================================= */
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(circle at 50% 60%, #fff0f5 0%, #ffc1cc 100%);
+            overflow: hidden;
+            height: 100vh;
+            height: 100dvh; 
+            margin: 0;
+            padding: 0;
+            color: #884a56;
+        }
+
+        .script-font { font-family: 'Dancing Script', cursive; }
+
+        /* SAKURAS FLOTANTES */
+        .sakura {
+            position: absolute;
+            background: linear-gradient(135deg, #ffc3a0 0%, #ffafbd 100%);
+            border-radius: 100% 0% 100% 0%;
+            opacity: 0.6;
+            animation: floatDown linear infinite;
+            z-index: 50; /* Por encima de todo en slides normales */
+            pointer-events: none;
+            filter: blur(0.5px);
+        }
+        @keyframes floatDown {
+            0% { top: -10%; transform: rotate(0deg) translateX(0) scale(0.8); opacity: 0; }
+            20% { opacity: 0.8; }
+            100% { top: 110%; transform: rotate(360deg) translateX(50px) scale(1); opacity: 0; }
+        }
+
+        /* CONTENEDOR PRINCIPAL */
+        .slide-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: all 0.8s ease;
+            pointer-events: none;
+            visibility: hidden;
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: all;
+            visibility: visible;
+            z-index: 10;
+        }
+        .slide.exit {
+            opacity: 0;
+            transform: scale(1.1);
+        }
+
+        /* ELEMENTOS SLIDES 1-4 */
+        #treeCanvas { width: 100%; max-width: 600px; height: auto; aspect-ratio: 1/1; }
+        .glass-card {
+            background: rgba(255,255,255,0.7); backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.9); box-shadow: 0 8px 32px rgba(255,100,120,0.1);
+        }
+        .photo-frame {
+            border: 6px solid white; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transform: rotate(-2deg); transition: transform 0.5s;
+        }
+        
+        /* Carrusel */
+        .carousel-scene { width: 300px; height: 240px; perspective: 2000px; margin-top: 2rem; }
+        @media (max-width: 768px) { .carousel-scene { transform: scale(0.6); margin-top: 0; } }
+        .carousel { width: 100%; height: 100%; transform-style: preserve-3d; animation: rotateCarousel 60s infinite linear; }
+        .carousel-item {
+            position: absolute; width: 240px; height: 300px; left: 30px; top: -30px;
+            border: 4px solid white; border-radius: 12px; overflow: hidden; background: white;
+            display: flex; flex-direction: column;
+        }
+        .carousel-img-container { width: 100%; height: 220px; }
+        .carousel-img-container img { width: 100%; height: 100%; object-fit: cover; }
+        .carousel-caption { height: 80px; background: #fff; text-align: center; display: flex; flex-direction: column; justify-content: center; }
+        .cc-date { font-size: 0.75rem; color: #e91e63; font-weight: bold; }
+        .cc-text { font-size: 0.9rem; color: #555; }
+        .c-1 { transform: rotateY(0deg) translateZ(450px); }
+        .c-2 { transform: rotateY(40deg) translateZ(450px); }
+        .c-3 { transform: rotateY(80deg) translateZ(450px); }
+        .c-4 { transform: rotateY(120deg) translateZ(450px); }
+        .c-5 { transform: rotateY(160deg) translateZ(450px); }
+        .c-6 { transform: rotateY(200deg) translateZ(450px); }
+        .c-7 { transform: rotateY(240deg) translateZ(450px); }
+        .c-8 { transform: rotateY(280deg) translateZ(450px); }
+        .c-9 { transform: rotateY(320deg) translateZ(450px); }
+        @keyframes rotateCarousel { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+
+        /* Botón */
+        .btn-glow {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: linear-gradient(90deg, #ff80ab 0%, #ffc1e3 100%);
+            border: none; padding: 14px 40px; border-radius: 100px;
+            color: white; font-weight: 600; font-size: 1.1rem;
+            box-shadow: 0 10px 25px rgba(255, 128, 171, 0.4); cursor: pointer; z-index: 100;
+            display: flex; gap: 10px; align-items: center;
+        }
+
+        /* ========================================= */
+        /* === ESTILOS INTEGRADOS DE LAS FLORES === */
+        /* ========================================= */
+        
+        /* Contenedor que simula el body del ejemplo original */
+        .flower-cycle-wrapper {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            background-color: #010113; /* --dark-color */
+            overflow: hidden;
+            perspective: 1000px;
+        }
+
+        /* Clase para pausar animación (equivalente a .container) */
+        .flower-cycle-wrapper.container * {
+            animation-play-state: paused !important;
+        }
+
+        /* --- CSS COPIADO Y ADAPTADO A ROSA --- */
+        
+        :root {
+            --dark-color: #010113;
+            /* Paleta Rosa para reemplazar amarillos */
+            --pink-base: #ff4081;  /* Reemplaza #fce700 (amarillo base) */
+            --pink-light: #f8bbd0; /* Reemplaza #e6f331 (amarillo claro) */
+            --pink-dark: #c2185b;  /* Reemplaza #e7b201 (amarillo oscuro) */
+            --pink-stem: #028137;  /* Verde tallo original */
+        }
+
+        .night {
+            position: absolute; /* Cambiado de fixed a absolute */
+            left: 50%;
+            top: 0;
+            transform: translateX(-50%);
+            width: 100%;
+            height: 100%;
+            filter: blur(0.1vmin);
+            background-image: radial-gradient(ellipse at top, transparent 0%, var(--dark-color)), radial-gradient(ellipse at bottom, var(--dark-color), rgba(145, 233, 255, 0.2)), repeating-linear-gradient(220deg, rgb(0, 0, 0) 0px, rgb(0, 0, 0) 19px, transparent 19px, transparent 22px), repeating-linear-gradient(189deg, rgb(0, 0, 0) 0px, rgb(0, 0, 0) 19px, transparent 19px, transparent 22px), repeating-linear-gradient(148deg, rgb(0, 0, 0) 0px, rgb(0, 0, 0) 19px, transparent 19px, transparent 22px), linear-gradient(90deg, #d81b60, rgb(240, 240, 240)); /* Gradient final cambiado a rosa */
+            z-index: 0;
+        }
+
+        .flowers {
+            position: relative;
+            transform: scale(0.9); /* AUMENTADO: Antes era 0.6 */
+            z-index: 10;
+            bottom: 5vh;
+        }
+        
+        .flower {
+            position: absolute;
+            bottom: 10vmin;
+            transform-origin: bottom center;
+            z-index: 10;
+            --fl-speed: 0.8s;
+        }
+
+        /* ... AQUI COMIENZAN LAS FLORES DEL ARCHIVO CSS.TXT ... */
+        /* ... Reemplazando colors amarillos por variables pink ... */
+
+        .flower--1 { animation: moving-flower-1 4s linear infinite; }
+        .flower--1 .flower__line { height: 70vmin; animation-delay: 0.3s; }
+        .flower--1 .flower__line__leaf--1 { animation: blooming-leaf-right var(--fl-speed) 1.6s backwards; }
+        .flower--1 .flower__line__leaf--2 { animation: blooming-leaf-right var(--fl-speed) 1.4s backwards; }
+        .flower--1 .flower__line__leaf--3 { animation: blooming-leaf-left var(--fl-speed) 1.2s backwards; }
+        .flower--1 .flower__line__leaf--4 { animation: blooming-leaf-left var(--fl-speed) 1s backwards; }
+        .flower--1 .flower__line__leaf--5 { animation: blooming-leaf-right var(--fl-speed) 1.8s backwards; }
+        .flower--1 .flower__line__leaf--6 { animation: blooming-leaf-left var(--fl-speed) 2s backwards; }
+
+        .flower--2 { left: 50%; transform: rotate(20deg); animation: moving-flower-2 4s linear infinite; }
+        .flower--2 .flower__line { height: 60vmin; animation-delay: 0.6s; }
+        .flower--2 .flower__line__leaf--1 { animation: blooming-leaf-right var(--fl-speed) 1.9s backwards; }
+        .flower--2 .flower__line__leaf--2 { animation: blooming-leaf-right var(--fl-speed) 1.7s backwards; }
+        .flower--2 .flower__line__leaf--3 { animation: blooming-leaf-left var(--fl-speed) 1.5s backwards; }
+        .flower--2 .flower__line__leaf--4 { animation: blooming-leaf-left var(--fl-speed) 1.3s backwards; }
+
+        .flower--3 { left: 50%; transform: rotate(-15deg); animation: moving-flower-3 4s linear infinite; }
+        .flower--3 .flower__line { animation-delay: 0.9s; }
+        .flower--3 .flower__line__leaf--1 { animation: blooming-leaf-right var(--fl-speed) 2.5s backwards; }
+        .flower--3 .flower__line__leaf--2 { animation: blooming-leaf-right var(--fl-speed) 2.3s backwards; }
+        .flower--3 .flower__line__leaf--3 { animation: blooming-leaf-left var(--fl-speed) 2.1s backwards; }
+        .flower--3 .flower__line__leaf--4 { animation: blooming-leaf-left var(--fl-speed) 1.9s backwards; }
+
+        /* Nueva flor del HTML que pasaste */
+        .flower--4 { left: 50%; transform: rotate(10deg); animation: moving-flower-2 4.5s linear infinite; }
+        .flower--4 .flower__line { height: 55vmin; animation-delay: 0.7s; }
+        .flower--4 .flower__line__leaf--1 { animation: blooming-leaf-right var(--fl-speed) 2.0s backwards; }
+        .flower--4 .flower__line__leaf--2 { animation: blooming-leaf-right var(--fl-speed) 1.8s backwards; }
+        .flower--4 .flower__line__leaf--3 { animation: blooming-leaf-left var(--fl-speed) 1.6s backwards; }
+        .flower--4 .flower__line__leaf--4 { animation: blooming-leaf-left var(--fl-speed) 1.4s backwards; }
+
+        .flower__leafs { position: relative; animation: blooming-flower 2s backwards; }
+        .flower__leafs--1 { animation-delay: 1.1s; }
+        .flower__leafs--2 { animation-delay: 1.4s; }
+        .flower__leafs--3 { animation-delay: 1.7s; }
+
+        .flower__leafs::after {
+            content: ""; position: absolute; left: 0; top: 0; transform: translate(-50%, -100%); width: 8vmin; height: 8vmin;
+            background-color: var(--pink-dark); /* Color cambiado */
+            filter: blur(10vmin);
+        }
+
+        .flower__leaf {
+            position: absolute; bottom: 0; left: 50%; width: 8vmin; height: 11vmin;
+            border-radius: 51% 49% 47% 53%/44% 45% 55% 69%;
+            background-color: var(--pink-base); /* Color cambiado */
+            background-image: linear-gradient(to top, var(--pink-light), var(--pink-base)); /* Color cambiado */
+            transform-origin: bottom center; opacity: 0.9;
+            box-shadow: inset 0 0 2vmin rgba(255, 255, 255, 0.5);
+        }
+
+        .flower__leaf--1 { transform: translate(-10%, 1%) rotateY(40deg) rotateX(-50deg); }
+        .flower__leaf--2 { transform: translate(-50%, -4%) rotateX(40deg); }
+        .flower__leaf--3 { transform: translate(-90%, 0%) rotateY(45deg) rotateX(50deg); }
+        
+        .flower__leaf--4 {
+            width: 8vmin; height: 8vmin; transform-origin: bottom left;
+            border-radius: 4vmin 10vmin 4vmin 4vmin;
+            transform: translate(0%, 18%) rotateX(70deg) rotate(-43deg);
+            background-image: linear-gradient(to top, var(--pink-light), var(--pink-base)); /* Color cambiado */
+            z-index: 1; opacity: 0.8;
+        }
+
+        .flower__white-circle { position: absolute; left: -3.5vmin; top: -3vmin; width: 9vmin; height: 4vmin; border-radius: 50%; background-color: #fff; }
+        .flower__white-circle::after {
+            content: ""; position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%); width: 60%; height: 60%; border-radius: inherit;
+            /* Patrón original pero con finales rosas */
+            background-image: repeating-linear-gradient(135deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(67.5deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(135deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(112.5deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(112.5deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(22.5deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(22.5deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(135deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(157.5deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(67.5deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 12px), repeating-linear-gradient(67.5deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 12px), linear-gradient(90deg, #c2185b, #e91e63);
+        }
+
+        .flower__line {
+            height: 55vmin; width: 1.5vmin;
+            background-image: linear-gradient(to left, rgba(0,0,0,0.2), transparent, rgba(255,255,255,0.2)), linear-gradient(to top, transparent 10%, #056d24, #028137);
+            box-shadow: inset 0 0 2px rgba(0,0,0,0.5);
+            animation: grow-flower-tree 4s backwards;
+        }
+
+        .flower__line__leaf {
+            --w: 7vmin; --h: calc(var(--w) + 2vmin); position: absolute; top: 20%; left: 90%; width: var(--w); height: var(--h);
+            border-top-right-radius: var(--h); border-bottom-left-radius: var(--h);
+            background-image: linear-gradient(to top, rgba(12, 94, 32, 0.4), #028137);
+        }
+        .flower__line__leaf--1 { transform: rotate(70deg) rotateY(30deg); }
+        .flower__line__leaf--2 { top: 45%; transform: rotate(70deg) rotateY(30deg); }
+        .flower__line__leaf--3, .flower__line__leaf--4, .flower__line__leaf--6 {
+            border-top-right-radius: 0; border-bottom-left-radius: 0; border-top-left-radius: var(--h); border-bottom-right-radius: var(--h);
+            left: -460%; top: 12%; transform: rotate(-70deg) rotateY(30deg);
+        }
+        .flower__line__leaf--4 { top: 40%; }
+        .flower__line__leaf--5 { top: 0; transform-origin: left; transform: rotate(70deg) rotateY(30deg) scale(0.6); }
+        .flower__line__leaf--6 { top: -2%; left: -450%; transform-origin: right; transform: rotate(-70deg) rotateY(30deg) scale(0.6); }
+
+        .flower__light {
+            position: absolute; bottom: 0vmin; width: 1vmin; height: 1vmin; background-color: rgb(255, 251, 0);
+            border-radius: 50%; filter: blur(0.2vmin); animation: light-ans 4s linear infinite backwards;
+        }
+        .flower__light:nth-child(odd) { background-color: var(--pink-base); } /* Luz rosa */
+        .flower__light--1 { left: -2vmin; animation-delay: 1s; }
+        .flower__light--2 { left: 3vmin; animation-delay: 0.5s; }
+        .flower__light--3 { left: -6vmin; animation-delay: 0.3s; }
+        .flower__light--4 { left: 6vmin; animation-delay: 0.9s; }
+        .flower__light--5 { left: -1vmin; animation-delay: 1.5s; }
+        .flower__light--6 { left: -4vmin; animation-delay: 3s; }
+        .flower__light--7 { left: 3vmin; animation-delay: 2s; }
+        .flower__light--8 { left: -6vmin; animation-delay: 3.5s; }
+
+        .flower__grass {
+            --c: #028137; --line-w: 1.5vmin; position: absolute; bottom: 12vmin; left: -7vmin;
+            display: flex; flex-direction: column; align-items: flex-end; z-index: 20; transform-origin: bottom center;
+            transform: rotate(-48deg) rotateY(40deg);
+        }
+        .flower__grass--1 { animation: moving-grass 2s linear infinite; }
+        .flower__grass--2 { left: 2vmin; bottom: 10vmin; transform: scale(0.5) rotate(75deg) rotateX(10deg) rotateY(-200deg); opacity: 0.8; z-index: 0; animation: moving-grass--2 1.5s linear infinite; }
+        .flower__grass--top { width: 7vmin; height: 10vmin; border-top-right-radius: 100%; border-right: var(--line-w) solid var(--c); transform-origin: bottom center; transform: rotate(-2deg); }
+        .flower__grass--bottom { margin-top: -2px; width: var(--line-w); height: 25vmin; background-image: linear-gradient(to top, transparent, var(--c)); }
+        .flower__grass__leaf { --size: 10vmin; position: absolute; width: calc(var(--size) * 2.1); height: var(--size); border-top-left-radius: var(--size); border-top-right-radius: var(--size); background-image: linear-gradient(to top, transparent, transparent 30%, var(--c)); z-index: 100; }
+        .flower__grass__leaf--1 { top: -6%; left: 30%; --size: 6vmin; transform: rotate(-20deg); animation: growing-grass-ans--1 2s 2.6s backwards; }
+        .flower__grass__leaf--2 { top: -5%; left: -110%; --size: 6vmin; transform: rotate(10deg); animation: growing-grass-ans--2 2s 2.4s linear backwards; }
+        .flower__grass__leaf--3 { top: 5%; left: 60%; --size: 8vmin; transform: rotate(-18deg) rotateX(-20deg); animation: growing-grass-ans--3 2s 2.2s linear backwards; }
+        .flower__grass__leaf--4 { top: 6%; left: -135%; --size: 8vmin; transform: rotate(2deg); animation: growing-grass-ans--4 2s 2s linear backwards; }
+        .flower__grass__leaf--5 { top: 20%; left: 60%; --size: 10vmin; transform: rotate(-24deg) rotateX(-20deg); animation: growing-grass-ans--5 2s 1.8s linear backwards; }
+        .flower__grass__leaf--6 { top: 22%; left: -180%; --size: 10vmin; transform: rotate(10deg); animation: growing-grass-ans--6 2s 1.6s linear backwards; }
+        .flower__grass__leaf--7 { top: 39%; left: 70%; --size: 10vmin; transform: rotate(-10deg); animation: growing-grass-ans--7 2s 1.4s linear backwards; }
+        .flower__grass__leaf--8 { top: 40%; left: -215%; --size: 11vmin; transform: rotate(10deg); animation: growing-grass-ans--8 2s 1.2s linear backwards; }
+        .flower__grass__overlay { position: absolute; top: -10%; right: 0%; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); filter: blur(1.5vmin); z-index: 100; }
+
+        .flower__g-long { --w: 2vmin; --h: 6vmin; --c: #0d6632; position: absolute; bottom: 10vmin; left: -3vmin; transform-origin: bottom center; transform: rotate(-30deg) rotateY(-20deg); display: flex; flex-direction: column; align-items: flex-end; animation: flower-g-long-ans 3s linear infinite; }
+        .flower__g-long__top { top: calc(var(--h) * -1); width: calc(var(--w) + 1vmin); height: var(--h); border-top-right-radius: 100%; border-right: 0.7vmin solid var(--c); transform: translate(-0.7vmin, 1vmin); }
+        .flower__g-long__bottom { width: var(--w); height: 50vmin; transform-origin: bottom center; background-image: linear-gradient(to top, transparent 30%, var(--c)); box-shadow: inset 0 0 2px rgba(0,0,0,0.5); clip-path: polygon(35% 0, 65% 1%, 100% 100%, 0% 100%); }
+
+        .flower__g-right { position: absolute; bottom: 6vmin; left: -2vmin; transform-origin: bottom left; transform: rotate(20deg); }
+        .flower__g-right .leaf { width: 30vmin; height: 50vmin; border-top-left-radius: 100%; border-left: 2vmin solid #028137; background-image: linear-gradient(to bottom, transparent, var(--dark-color) 60%); -webkit-mask-image: linear-gradient(to top, transparent 30%, #028137 60%); }
+        .flower__g-right--1 { animation: flower-g-right-ans 2.5s linear infinite; }
+        .flower__g-right--2 { left: 5vmin; transform: rotateY(-180deg); animation: flower-g-right-ans--2 3s linear infinite; }
+        .flower__g-right--2 .leaf { height: 75vmin; filter: blur(0.3vmin); opacity: 0.8; }
+
+        .flower__g-front { position: absolute; bottom: 6vmin; left: 2.5vmin; z-index: 100; transform-origin: bottom center; transform: rotate(-28deg) rotateY(30deg) scale(1.04); animation: flower__g-front-ans 2s linear infinite; }
+        .flower__g-front__line { width: 0.3vmin; height: 20vmin; background-image: linear-gradient(to top, transparent, #028137, transparent 100%); position: relative; }
+        .flower__g-front__leaf-wrapper { position: absolute; top: 0; left: 0; transform-origin: bottom left; transform: rotate(10deg); }
+        .flower__g-front__leaf-wrapper:nth-child(even) { left: 0vmin; transform: rotateY(-180deg) rotate(5deg); animation: flower__g-front__leaf-left-ans 1s ease-in backwards; }
+        .flower__g-front__leaf-wrapper:nth-child(odd) { animation: flower__g-front__leaf-ans 1s ease-in backwards; }
+        .flower__g-front__leaf-wrapper--1 { top: -8vmin; transform: scale(0.7); animation: flower__g-front__leaf-ans 1s 5.5s ease-in backwards !important; }
+        .flower__g-front__leaf-wrapper--2 { top: -8vmin; transform: rotateY(-180deg) scale(0.7) !important; animation: flower__g-front__leaf-left-ans-2 1s 4.6s ease-in backwards !important; }
+        .flower__g-front__leaf-wrapper--3 { top: -3vmin; animation: flower__g-front__leaf-ans 1s 4.6s ease-in backwards; }
+        .flower__g-front__leaf-wrapper--4 { top: -3vmin; transform: rotateY(-180deg) scale(0.9) !important; animation: flower__g-front__leaf-left-ans-2 1s 4.6s ease-in backwards !important; }
+        .flower__g-front__leaf-wrapper--5, .flower__g-front__leaf-wrapper--6 { top: 2vmin; }
+        .flower__g-front__leaf-wrapper--7, .flower__g-front__leaf-wrapper--8 { top: 6.5vmin; }
+        .flower__g-front__leaf-wrapper--2 { animation-delay: 5.2s !important; }
+        .flower__g-front__leaf-wrapper--3 { animation-delay: 4.9s !important; }
+        .flower__g-front__leaf-wrapper--5 { animation-delay: 4.3s !important; }
+        .flower__g-front__leaf-wrapper--6 { animation-delay: 4.1s !important; }
+        .flower__g-front__leaf-wrapper--7 { animation-delay: 3.8s !important; }
+        .flower__g-front__leaf-wrapper--8 { animation-delay: 3.5s !important; }
+        .flower__g-front__leaf { width: 10vmin; height: 10vmin; border-radius: 100% 0% 0% 100%/100% 100% 0% 0%; box-shadow: inset 0 2px 1vmin hsla(150, 97%, 14%, 0.2); background-image: linear-gradient(to bottom left, transparent, var(--dark-color)), linear-gradient(to bottom right, #028137 50%, transparent 50%, transparent); -webkit-mask-image: linear-gradient(to bottom right, #028137 50%, transparent 50%, transparent); mask-image: linear-gradient(to bottom right, #028137 50%, transparent 50%, transparent); }
+
+        .flower__g-fr { position: absolute; bottom: -4vmin; left: vmin; transform-origin: bottom left; z-index: 10; animation: flower__g-fr-ans 2s linear infinite; }
+        .flower__g-fr .leaf { width: 30vmin; height: 50vmin; border-top-left-radius: 100%; border-left: 2vmin solid #028137; -webkit-mask-image: linear-gradient(to top, transparent 25%, #028137 50%); position: relative; z-index: 1; }
+        .flower__g-fr__leaf { position: absolute; top: 0; left: 0; width: 10vmin; height: 10vmin; border-radius: 100% 0% 0% 100%/100% 100% 0% 0%; box-shadow: inset 0 2px 1vmin hsla(184deg, 97%, 58%, 0.2); background-image: linear-gradient(to bottom left, transparent, var(--dark-color) 98%), linear-gradient(to bottom right, #028137 45%, transparent 50%, transparent); -webkit-mask-image: linear-gradient(135deg, #028137 40%, transparent 50%, transparent); }
+        .flower__g-fr__leaf--1 { left: 20vmin; transform: rotate(45deg); animation: flower__g-fr-leaft-ans-1 0.5s 5.2s linear backwards; }
+        .flower__g-fr__leaf--2 { left: 12vmin; top: -7vmin; transform: rotate(25deg) rotateY(-180deg); animation: flower__g-fr-leaft-ans-6 0.5s 5s linear backwards; }
+        .flower__g-fr__leaf--3 { left: 15vmin; top: 6vmin; transform: rotate(55deg); animation: flower__g-fr-leaft-ans-5 0.5s 4.8s linear backwards; }
+        .flower__g-fr__leaf--4 { left: 6vmin; top: -2vmin; transform: rotate(25deg) rotateY(-180deg); animation: flower__g-fr-leaft-ans-6 0.5s 4.6s linear backwards; }
+        .flower__g-fr__leaf--5 { left: 10vmin; top: 14vmin; transform: rotate(55deg); animation: flower__g-fr-leaft-ans-5 0.5s 4.4s linear backwards; }
+        .flower__g-fr__leaf--6 { left: 0vmin; top: 6vmin; transform: rotate(25deg) rotateY(-180deg); animation: flower__g-fr-leaft-ans-6 0.5s 4.2s linear backwards; }
+        .flower__g-fr__leaf--7 { left: 5vmin; top: 22vmin; transform: rotate(45deg); animation: flower__g-fr-leaft-ans-7 0.5s 4s linear backwards; }
+        .flower__g-fr__leaf--8 { left: -4vmin; top: 15vmin; transform: rotate(15deg) rotateY(-180deg); animation: flower__g-fr-leaft-ans-8 0.5s 3.8s linear backwards; }
+
+        .long-g { position: absolute; bottom: 25vmin; left: -42vmin; transform-origin: bottom left; }
+        .long-g--1 { bottom: 0vmin; transform: scale(0.8) rotate(-5deg); }
+        .long-g--1 .leaf { -webkit-mask-image: linear-gradient(to top, transparent 40%, #028137 80%) !important; }
+        .long-g--2, .long-g--3 { bottom: -3vmin; left: -35vmin; transform-origin: center; transform: scale(0.6) rotateX(60deg); }
+        .long-g--2 .leaf, .long-g--3 .leaf { -webkit-mask-image: linear-gradient(to top, transparent 50%, #e6f331 80%) !important; }
+        .long-g--2 .leaf--1, .long-g--3 .leaf--1 { left: -1vmin; transform: rotateY(-180deg); }
+        .long-g--3 { left: -17vmin; bottom: 0vmin; }
+        .long-g--3 .leaf { -webkit-mask-image: linear-gradient(to top, transparent 40%, #028137 80%) !important; }
+        .long-g--4 { left: 25vmin; bottom: -3vmin; transform-origin: center; transform: scale(0.6) rotateX(60deg); }
+        .long-g--4 .leaf { -webkit-mask-image: linear-gradient(to top, transparent 50%, #028137 80%) !important; }
+        .long-g--5 { left: 42vmin; bottom: 0vmin; transform: scale(0.8) rotate(2deg); }
+        .long-g--6 { left: 0vmin; bottom: -20vmin; z-index: 100; filter: blur(0.3vmin); transform: scale(0.8) rotate(2deg); }
+        .long-g--7 { left: 35vmin; bottom: 20vmin; z-index: -1; filter: blur(0.3vmin); transform: scale(0.6) rotate(2deg); opacity: 0.7; }
+        .long-g .leaf { --w: 15vmin; --h: 40vmin; --c: #1aaa15; position: absolute; bottom: 0; width: var(--w); height: var(--h); border-top-left-radius: 100%; border-left: 2vmin solid var(--c); -webkit-mask-image: linear-gradient(to top, transparent 20%, var(--dark-color)); transform-origin: bottom center; }
+        .long-g .leaf--0 { left: 2vmin; animation: leaf-ans-1 4s linear infinite; }
+        .long-g .leaf--1 { --w: 5vmin; --h: 60vmin; animation: leaf-ans-1 4s linear infinite; }
+        .long-g .leaf--2 { --w: 10vmin; --h: 40vmin; left: -0.5vmin; bottom: 5vmin; transform-origin: bottom left; transform: rotateY(-180deg); animation: leaf-ans-2 3s linear infinite; }
+        .long-g .leaf--3 { --w: 5vmin; --h: 30vmin; left: -1vmin; bottom: 3.2vmin; transform-origin: bottom left; transform: rotate(-10deg) rotateY(-180deg); animation: leaf-ans-3 3s linear infinite; }
+
+        .grow-ans { animation: grow-ans 2s var(--d) backwards; }
+
+        /* Animation Keyframes */
+        @keyframes growing-grass-ans--1 { 0% { transform-origin: bottom left; transform: rotate(-20deg) scale(0); } }
+        @keyframes growing-grass-ans--2 { 0% { transform-origin: bottom right; transform: rotate(10deg) scale(0); } }
+        @keyframes growing-grass-ans--3 { 0% { transform-origin: bottom left; transform: rotate(-18deg) rotateX(-20deg) scale(0); } }
+        @keyframes growing-grass-ans--4 { 0% { transform-origin: bottom right; transform: rotate(2deg) scale(0); } }
+        @keyframes growing-grass-ans--5 { 0% { transform-origin: bottom left; transform: rotate(-24deg) rotateX(-20deg) scale(0); } }
+        @keyframes growing-grass-ans--6 { 0% { transform-origin: bottom right; transform: rotate(10deg) scale(0); } }
+        @keyframes growing-grass-ans--7 { 0% { transform-origin: bottom left; transform: rotate(-10deg) scale(0); } }
+        @keyframes growing-grass-ans--8 { 0% { transform-origin: bottom right; transform: rotate(10deg) scale(0); } }
+        @keyframes flower-g-long-ans { 0%, 100% { transform: rotate(-30deg) rotateY(-20deg); } 50% { transform: rotate(-32deg) rotateY(-20deg); } }
+        @keyframes flower-g-right-ans { 0%, 100% { transform: rotate(20deg); } 50% { transform: rotate(24deg) rotateX(-20deg); } }
+        @keyframes flower-g-right-ans--2 { 0%, 100% { transform: rotateY(-180deg) rotate(0deg) rotateX(-20deg); } 50% { transform: rotateY(-180deg) rotate(6deg) rotateX(-20deg); } }
+        @keyframes flower__g-front-ans { 0%, 100% { transform: rotate(-28deg) rotateY(30deg) scale(1.04); } 50% { transform: rotate(-35deg) rotateY(40deg) scale(1.04); } }
+        @keyframes flower__g-front__leaf-left-ans { 0% { transform: rotateY(-180deg) rotate(5deg) scale(0); } }
+        @keyframes flower__g-front__leaf-ans { 0% { transform: rotate(10deg) scale(0); } }
+        @keyframes flower__g-front__leaf-left-ans-2 { 0% { transform: rotateY(-180deg) scale(0); } }
+        @keyframes flower__g-fr-ans { 0%, 100% { transform: rotate(2deg); } 50% { transform: rotate(4deg); } }
+        @keyframes flower__g-fr-leaft-ans-1 { 0% { transform-origin: left; transform: rotate(45deg) scale(0); } }
+        @keyframes flower__g-fr-leaft-ans-5 { 0% { transform-origin: left; transform: rotate(55deg) scale(0); } }
+        @keyframes flower__g-fr-leaft-ans-6 { 0% { transform-origin: right; transform: rotate(25deg) rotateY(-180deg) scale(0); } }
+        @keyframes flower__g-fr-leaft-ans-7 { 0% { transform-origin: left; transform: rotate(45deg) scale(0); } }
+        @keyframes flower__g-fr-leaft-ans-8 { 0% { transform-origin: right; transform: rotate(15deg) rotateY(-180deg) scale(0); } }
+        @keyframes leaf-ans-1 { 0%, 100% { transform: rotate(-5deg) scale(1); } 50% { transform: rotate(5deg) scale(1.1); } }
+        @keyframes leaf-ans-2 { 0%, 100% { transform: rotateY(-180deg) rotate(5deg); } 50% { transform: rotateY(-180deg) rotate(0deg) scale(1.1); } }
+        @keyframes leaf-ans-3 { 0%, 100% { transform: rotate(-10deg) rotateY(-180deg); } 50% { transform: rotate(-20deg) rotateY(-180deg); } }
+        @keyframes grow-ans { 0% { transform: scale(0); opacity: 0; } }
+        @keyframes light-ans { 0% { opacity: 0; transform: translateY(0vmin); } 25% { opacity: 1; transform: translateY(-5vmin) translateX(-2vmin); } 50% { opacity: 1; transform: translateY(-15vmin) translateX(2vmin); filter: blur(0.2vmin); } 75% { transform: translateY(-20vmin) translateX(-2vmin); filter: blur(0.2vmin); } 100% { transform: translateY(-30vmin); opacity: 0; filter: blur(1vmin); } }
+        @keyframes moving-flower-1 { 0%, 100% { transform: rotate(2deg); } 50% { transform: rotate(-2deg); } }
+        @keyframes moving-flower-2 { 0%, 100% { transform: rotate(18deg); } 50% { transform: rotate(14deg); } }
+        @keyframes moving-flower-3 { 0%, 100% { transform: rotate(-18deg); } 50% { transform: rotate(-20deg) rotateY(-10deg); } }
+        @keyframes blooming-leaf-right { 0% { transform-origin: left; transform: rotate(70deg) rotateY(30deg) scale(0); } }
+        @keyframes blooming-leaf-left { 0% { transform-origin: right; transform: rotate(-70deg) rotateY(30deg) scale(0); } }
+        @keyframes grow-flower-tree { 0% { height: 0; border-radius: 1vmin; } }
+        @keyframes blooming-flower { 0% { transform: scale(0); } }
+        @keyframes moving-grass { 0%, 100% { transform: rotate(-48deg) rotateY(40deg); } 50% { transform: rotate(-50deg) rotateY(40deg); } }
+        @keyframes moving-grass--2 { 0%, 100% { transform: scale(0.5) rotate(75deg) rotateX(10deg) rotateY(-200deg); } 50% { transform: scale(0.5) rotate(79deg) rotateX(10deg) rotateY(-200deg); } }
+        @keyframes growing-grass-ans { 0% { transform: scale(0); } }
+
+        /* BUBBLES CSS */
+        .bubbles { position: absolute; top: 0; left: 0; height: 100%; width: 100%; pointer-events: none; z-index: 200; }
+        .bubble { position: absolute; z-index: 200; border-radius: 50%; }
+        .bubble:nth-child(1) { top: 8%; left: 60%; height: 11vmin; width: 11vmin; animation: love-burst 3s infinite 0s; box-shadow: inset 0 0 0 5.5vmin transparent; transform: translate(0, 0.05em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(2) { top: 83%; left: 14%; height: 20vmin; width: 20vmin; animation: love-burst 3s infinite 0.15s; box-shadow: inset 0 0 0 10vmin transparent; transform: translate(0, 0.75em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(3) { top: 25%; left: 49%; height: 4vmin; width: 4vmin; animation: love-burst 3s infinite 0.3s; box-shadow: inset 0 0 0 2vmin transparent; transform: translate(0, 0.5em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(4) { top: 63%; left: 93%; height: 3vmin; width: 3vmin; animation: love-burst 3s infinite 0.45s; box-shadow: inset 0 0 0 1.5vmin transparent; transform: translate(0, 0.35em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(5) { top: 7%; left: 56%; height: 18vmin; width: 18vmin; animation: love-burst 3s infinite 0.6s; box-shadow: inset 0 0 0 9vmin transparent; transform: translate(0, 0.3em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(6) { top: 10%; left: 68%; height: 5vmin; width: 5vmin; animation: love-burst 3s infinite 0.75s; box-shadow: inset 0 0 0 2.5vmin transparent; transform: translate(0, 1.1em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(7) { top: 68%; left: 1%; height: 5vmin; width: 5vmin; animation: love-burst 3s infinite 0.9s; box-shadow: inset 0 0 0 2.5vmin transparent; transform: translate(0, 0.15em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(8) { top: 61%; left: 51%; height: 11vmin; width: 11vmin; animation: love-burst 3s infinite 1.05s; box-shadow: inset 0 0 0 5.5vmin transparent; transform: translate(0, 1.05em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(9) { top: 24%; left: 45%; height: 11vmin; width: 11vmin; animation: love-burst 3s infinite 1.2s; box-shadow: inset 0 0 0 5.5vmin transparent; transform: translate(0, 1em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(10) { top: 13%; left: 10%; height: 19vmin; width: 19vmin; animation: love-burst 3s infinite 1.35s; box-shadow: inset 0 0 0 9.5vmin transparent; transform: translate(0, 1em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(11) { top: 76%; left: 7%; height: 14vmin; width: 14vmin; animation: love-burst 3s infinite 1.5s; box-shadow: inset 0 0 0 7vmin transparent; transform: translate(0, 0.1em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(12) { top: 22%; left: 8%; height: 17vmin; width: 17vmin; animation: love-burst 3s infinite 1.65s; box-shadow: inset 0 0 0 8.5vmin transparent; transform: translate(0, 0.2em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(13) { top: 23%; left: 81%; height: 16vmin; width: 16vmin; animation: love-burst 3s infinite 1.8s; box-shadow: inset 0 0 0 8vmin transparent; transform: translate(0, 0.1em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(14) { top: 77%; left: 88%; height: 3vmin; width: 3vmin; animation: love-burst 3s infinite 1.95s; box-shadow: inset 0 0 0 1.5vmin transparent; transform: translate(0, 0.45em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(15) { top: 41%; left: 1%; height: 9vmin; width: 9vmin; animation: love-burst 3s infinite 2.1s; box-shadow: inset 0 0 0 4.5vmin transparent; transform: translate(0, 0.05em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(16) { top: 51%; left: 51%; height: 8vmin; width: 8vmin; animation: love-burst 3s infinite 2.25s; box-shadow: inset 0 0 0 4vmin transparent; transform: translate(0, 1.15em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(17) { top: 37%; left: 65%; height: 11vmin; width: 11vmin; animation: love-burst 3s infinite 2.4s; box-shadow: inset 0 0 0 5.5vmin transparent; transform: translate(0, 0.2em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(18) { top: 11%; left: 83%; height: 18vmin; width: 18vmin; animation: love-burst 3s infinite 2.55s; box-shadow: inset 0 0 0 9vmin transparent; transform: translate(0, 0.9em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(19) { top: 64%; left: 86%; height: 12vmin; width: 12vmin; animation: love-burst 3s infinite 2.7s; box-shadow: inset 0 0 0 6vmin transparent; transform: translate(0, 0.65em) scale(0); transform-origin: center bottom; }
+        .bubble:nth-child(20) { top: 39%; left: 24%; height: 19vmin; width: 19vmin; animation: love-burst 3s infinite 2.85s; box-shadow: inset 0 0 0 9.5vmin transparent; transform: translate(0, 0.2em) scale(0); transform-origin: center bottom; }
+
+        @keyframes love-burst { 50%, 100% { box-shadow: inset 0 0 0 0 rgb(18, 226, 129); transform: translate(0, 0) scale(1); } }
+        @keyframes love { 50% { fill: #e91e63; opacity: 1; } }
+
+        .heart { fill: transparent; opacity: 0; }
+        .bubble:nth-child(1) .heart { animation: love 3s forwards infinite 0s; transform: scale(0.5) rotate(-4deg); }
+        .bubble:nth-child(2) .heart { animation: love 3s forwards infinite 0.15s; transform: scale(0.5) rotate(22deg); }
+        .bubble:nth-child(3) .heart { animation: love 3s forwards infinite 0.3s; transform: scale(0.5) rotate(-5deg); }
+        .bubble:nth-child(4) .heart { animation: love 3s forwards infinite 0.45s; transform: scale(0.5) rotate(50deg); }
+        .bubble:nth-child(5) .heart { animation: love 3s forwards infinite 0.6s; transform: scale(0.5) rotate(-29deg); }
+        .bubble:nth-child(6) .heart { animation: love 3s forwards infinite 0.75s; transform: scale(0.5) rotate(35deg); }
+        .bubble:nth-child(7) .heart { animation: love 3s forwards infinite 0.9s; transform: scale(0.5) rotate(-5deg); }
+        .bubble:nth-child(8) .heart { animation: love 3s forwards infinite 1.05s; transform: scale(0.5) rotate(40deg); }
+        .bubble:nth-child(9) .heart { animation: love 3s forwards infinite 1.2s; transform: scale(0.5) rotate(-35deg); }
+        .bubble:nth-child(10) .heart { animation: love 3s forwards infinite 1.35s; transform: scale(0.5) rotate(28deg); }
+        .bubble:nth-child(11) .heart { animation: love 3s forwards infinite 1.5s; transform: scale(0.5) rotate(-3deg); }
+        .bubble:nth-child(12) .heart { animation: love 3s forwards infinite 1.65s; transform: scale(0.5) rotate(48deg); }
+        .bubble:nth-child(13) .heart { animation: love 3s forwards infinite 1.8s; transform: scale(0.5) rotate(-33deg); }
+        .bubble:nth-child(14) .heart { animation: love 3s forwards infinite 1.95s; transform: scale(0.5) rotate(40deg); }
+        .bubble:nth-child(15) .heart { animation: love 3s forwards infinite 2.1s; transform: scale(0.5) rotate(-29deg); }
+        .bubble:nth-child(16) .heart { animation: love 3s forwards infinite 2.25s; transform: scale(0.5) rotate(19deg); }
+        .bubble:nth-child(17) .heart { animation: love 3s forwards infinite 2.4s; transform: scale(0.5) rotate(-29deg); }
+        .bubble:nth-child(18) .heart { animation: love 3s forwards infinite 2.55s; transform: scale(0.5) rotate(14deg); }
+        .bubble:nth-child(19) .heart { animation: love 3s forwards infinite 2.7s; transform: scale(0.5) rotate(-10deg); }
+        .bubble:nth-child(20) .heart { animation: love 3s forwards infinite 2.85s; transform: scale(0.5) rotate(46deg); }
+
+        .final-message {
+            position: absolute; top: 15%; width: 100%; text-align: center; color: white;
+            z-index: 50; text-shadow: 0 0 10px rgba(233, 30, 99, 0.8);
+            opacity: 0; animation: fadeIn 1s forwards; animation-delay: 4s;
+        }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+    <div id="sakura-container"></div>
+
+    <div class="slide-container">
+        
+        <!-- SLIDE 1 -->
+        <div class="slide active w-full" id="slide-1">
+            <h1 class="script-font text-5xl md:text-7xl text-pink-600 mb-2 drop-shadow-sm tracking-wide text-center">Felices 24 Años</h1>
+            <p class="text-sm md:text-lg font-bold tracking-widest text-pink-500 bg-white/60 px-6 py-2 rounded-full uppercase mb-4 shadow-sm text-center">Para el amor de mi vida</p>
+            <canvas id="treeCanvas" width="600" height="600" class="mt-2"></canvas>
+        </div>
+
+        <!-- SLIDE 2 -->
+        <div class="slide w-full px-4" id="slide-2">
+            <div class="flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 w-full max-w-6xl">
+                <div class="photo-frame rounded-2xl overflow-hidden relative w-64 h-80 md:w-80 md:h-[30rem] shrink-0">
+                    <img src="YARI.jpeg" class="w-full h-full object-cover">
+                </div>
+                <div class="glass-card p-6 md:p-10 rounded-3xl w-full max-w-md md:max-w-xl text-center md:text-left">
+                    <h2 class="script-font text-4xl md:text-5xl text-pink-500 mb-4 md:mb-6">Yariiii ❤️</h2>
+                    <p class="text-base md:text-xl text-slate-600 leading-relaxed font-light italic">"Me alegra besarte, me alegra verte cada tiempo, me alegra que hagas reír de muchas formas. Simplemente, me alegra tenerte en mi vida."</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 3 -->
+        <div class="slide w-full" id="slide-3">
+            <div class="text-center mb-4 md:mb-6 relative z-20 px-4">
+                <h2 class="script-font text-5xl md:text-6xl text-pink-500 mb-2">Nuestros Momentos</h2>
+                <p class="text-slate-500 font-light bg-white/40 px-4 py-1 rounded-full inline-block text-xs md:text-base">Nuestros recuerdos del 2025 ✨</p>
+            </div>
+            <div class="carousel-scene">
+                <div class="carousel">
+                    <!-- Items carrusel... -->
+                    <div class="carousel-item c-1"><div class="carousel-img-container"><img src="ponche.jpeg"></div><div class="carousel-caption"><div class="cc-date">25 Mar 2025</div><div class="cc-text">Fuimos por ponche</div></div></div>
+                    <div class="carousel-item c-2"><div class="carousel-img-container"><img src="Auto.jpeg"></div><div class="carousel-caption"><div class="cc-date">30 Mar 2025</div><div class="cc-text">Citas en el auto</div></div></div>
+                    <div class="carousel-item c-3"><div class="carousel-img-container"><img src="hije.jpeg"></div><div class="carousel-caption"><div class="cc-date">20 Abr 2025</div><div class="cc-text">Rollos de canela</div></div></div>
+                    <div class="carousel-item c-4"><div class="carousel-img-container"><img src="picnic.jpeg"></div><div class="carousel-caption"><div class="cc-date">31 May 2025</div><div class="cc-text">Nuestros Picnics</div></div></div>
+                    <div class="carousel-item c-5"><div class="carousel-img-container"><img src="cosplay.jpeg"></div><div class="carousel-caption"><div class="cc-date">08 Jul 2025</div><div class="cc-text">Tu Cosplay</div></div></div>
+                    <div class="carousel-item c-6"><div class="carousel-img-container"><img src="Yarizaurio.jpeg"></div><div class="carousel-caption"><div class="cc-date">09 Jul 2025</div><div class="cc-text">El Yarizaurio</div></div></div>
+                    <div class="carousel-item c-7"><div class="carousel-img-container"><img src="graduacion.jpeg"></div><div class="carousel-caption"><div class="cc-date">02 Ago 2025</div><div class="cc-text">Graduación</div></div></div>
+                    <div class="carousel-item c-8"><div class="carousel-img-container"><img src="happyland.jpeg"></div><div class="carousel-caption"><div class="cc-date">02 Ago 2025</div><div class="cc-text">Happy Land</div></div></div>
+                    <div class="carousel-item c-9"><div class="carousel-img-container"><img src="navidad.jpeg"></div><div class="carousel-caption"><div class="cc-date">17 Dic 2025</div><div class="cc-text">Feria Navidad</div></div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 4 -->
+        <div class="slide w-full px-4" id="slide-4">
+            <div class="glass-card p-6 md:p-10 rounded-[2rem] text-center w-full max-w-lg border border-white/80 transform transition duration-500 overflow-y-auto max-h-[80vh]">
+                <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-pink-50 flex items-center justify-center shadow-inner border-4 border-white">
+                    <img src="https://media.tenor.com/FwY-tB1V64IAAAAi/cute-love.gif" class="w-16 h-16 rounded-full opacity-90 mix-blend-multiply">
+                </div>
+                <h2 class="script-font text-4xl md:text-5xl text-pink-600 mb-4">Te Amo Infinito</h2>
+                <div class="text-sm md:text-lg text-slate-600 mb-6 font-light leading-relaxed text-justify px-2 space-y-4">
+                    <p>¡Yariiii, feliz cumpleaños! Te amo muchísimo. Me alegra infinitamente haberte conocido y tenerte en mi vida; desde que llegaste, has iluminado y cambiado mi mundo de la mejor manera. Verte cumplir años me hace muy feliz, porque celebrarte es algo muy especial para mí.</p>
+                    <p>Deseo de todo corazón que hoy la pases increíble. Me alegra haberte encontrado en mi camino, me alegra cada risa que compartimos, cada momento en que te veo y saber que estamos el uno para el otro.</p>
+                    <p>Me encanta compartir contigo, abrazarte y crear recuerdos juntos. Te amo inmensamente y me emociona pensar en todos los cumpleaños que aún celebraremos. Guardo con cariño cada foto y cada recuerdo; todos esos momentos significan mucho para mí… y sé que vendrán muchos más.</p>
+                    <p class="font-medium text-pink-500 text-center">Hace 24 años nació una niña muy especial para mí. ¡Te amo!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SLIDE 5: EL GRAN FINAL -->
+        <div class="slide w-full" id="slide-5">
+            <div id="flower-wrapper" class="flower-cycle-wrapper container">
+                <div class="night"></div>
+                
+                <div class="final-message">
+                    <h1 class="script-font text-6xl drop-shadow-[0_0_10px_rgba(233,30,99,0.8)]">¡Feliz Cumpleaños!</h1>
+                    <p class="text-xl mt-4">Estas flores rosas son para ti...</p>
+                </div>
+
+                <div class="flowers">
+                    <div class="flower flower--1">
+                        <div class="flower__leafs flower__leafs--1">
+                            <div class="flower__leaf flower__leaf--1"></div><div class="flower__leaf flower__leaf--2"></div><div class="flower__leaf flower__leaf--3"></div><div class="flower__leaf flower__leaf--4"></div><div class="flower__white-circle"></div>
+                            <div class="flower__light flower__light--1"></div><div class="flower__light flower__light--2"></div><div class="flower__light flower__light--3"></div><div class="flower__light flower__light--4"></div><div class="flower__light flower__light--5"></div><div class="flower__light flower__light--6"></div><div class="flower__light flower__light--7"></div><div class="flower__light flower__light--8"></div>
+                        </div>
+                        <div class="flower__line"><div class="flower__line__leaf flower__line__leaf--1"></div><div class="flower__line__leaf flower__line__leaf--2"></div><div class="flower__line__leaf flower__line__leaf--3"></div><div class="flower__line__leaf flower__line__leaf--4"></div><div class="flower__line__leaf flower__line__leaf--5"></div><div class="flower__line__leaf flower__line__leaf--6"></div></div>
+                    </div>
+                    <div class="flower flower--2">
+                        <div class="flower__leafs flower__leafs--2">
+                            <div class="flower__leaf flower__leaf--1"></div><div class="flower__leaf flower__leaf--2"></div><div class="flower__leaf flower__leaf--3"></div><div class="flower__leaf flower__leaf--4"></div><div class="flower__white-circle"></div>
+                            <div class="flower__light flower__light--1"></div><div class="flower__light flower__light--2"></div><div class="flower__light flower__light--3"></div><div class="flower__light flower__light--4"></div><div class="flower__light flower__light--5"></div><div class="flower__light flower__light--6"></div><div class="flower__light flower__light--7"></div><div class="flower__light flower__light--8"></div>
+                        </div>
+                        <div class="flower__line"><div class="flower__line__leaf flower__line__leaf--1"></div><div class="flower__line__leaf flower__line__leaf--2"></div><div class="flower__line__leaf flower__line__leaf--3"></div><div class="flower__line__leaf flower__line__leaf--4"></div></div>
+                    </div>
+                    <div class="flower flower--3">
+                        <div class="flower__leafs flower__leafs--3">
+                            <div class="flower__leaf flower__leaf--1"></div><div class="flower__leaf flower__leaf--2"></div><div class="flower__leaf flower__leaf--3"></div><div class="flower__leaf flower__leaf--4"></div><div class="flower__white-circle"></div>
+                            <div class="flower__light flower__light--1"></div><div class="flower__light flower__light--2"></div><div class="flower__light flower__light--3"></div><div class="flower__light flower__light--4"></div><div class="flower__light flower__light--5"></div><div class="flower__light flower__light--6"></div><div class="flower__light flower__light--7"></div><div class="flower__light flower__light--8"></div>
+                        </div>
+                        <div class="flower__line"><div class="flower__line__leaf flower__line__leaf--1"></div><div class="flower__line__leaf flower__line__leaf--2"></div><div class="flower__line__leaf flower__line__leaf--3"></div><div class="flower__line__leaf flower__line__leaf--4"></div></div>
+                    </div>
+                    <!-- FLOR 4 -->
+                    <div class="flower flower--4">
+                        <div class="flower__leafs flower__leafs--3">
+                            <div class="flower__leaf flower__leaf--1"></div><div class="flower__leaf flower__leaf--2"></div><div class="flower__leaf flower__leaf--3"></div><div class="flower__leaf flower__leaf--4"></div><div class="flower__white-circle"></div>
+                            <div class="flower__light flower__light--1"></div><div class="flower__light flower__light--2"></div><div class="flower__light flower__light--3"></div><div class="flower__light flower__light--4"></div><div class="flower__light flower__light--5"></div><div class="flower__light flower__light--6"></div><div class="flower__light flower__light--7"></div><div class="flower__light flower__light--8"></div>
+                        </div>
+                        <div class="flower__line"><div class="flower__line__leaf flower__line__leaf--1"></div><div class="flower__line__leaf flower__line__leaf--2"></div><div class="flower__line__leaf flower__line__leaf--3"></div><div class="flower__line__leaf flower__line__leaf--4"></div></div>
+                    </div>
+                    
+                    <div class="grow-ans" style="--d:1.2s"><div class="flower__g-long"><div class="flower__g-long__top"></div><div class="flower__g-long__bottom"></div></div></div>
+                    
+                    <div class="growing-grass"><div class="flower__grass flower__grass--1"><div class="flower__grass--top"></div><div class="flower__grass--bottom"></div><div class="flower__grass__leaf flower__grass__leaf--1"></div><div class="flower__grass__leaf flower__grass__leaf--2"></div><div class="flower__grass__leaf flower__grass__leaf--3"></div><div class="flower__grass__leaf flower__grass__leaf--4"></div><div class="flower__grass__leaf flower__grass__leaf--5"></div><div class="flower__grass__leaf flower__grass__leaf--6"></div><div class="flower__grass__leaf flower__grass__leaf--7"></div><div class="flower__grass__leaf flower__grass__leaf--8"></div><div class="flower__grass__overlay"></div></div></div>
+                    <div class="growing-grass"><div class="flower__grass flower__grass--2"><div class="flower__grass--top"></div><div class="flower__grass--bottom"></div><div class="flower__grass__leaf flower__grass__leaf--1"></div><div class="flower__grass__leaf flower__grass__leaf--2"></div><div class="flower__grass__leaf flower__grass__leaf--3"></div><div class="flower__grass__leaf flower__grass__leaf--4"></div><div class="flower__grass__leaf flower__grass__leaf--5"></div><div class="flower__grass__leaf flower__grass__leaf--6"></div><div class="flower__grass__leaf flower__grass__leaf--7"></div><div class="flower__grass__leaf flower__grass__leaf--8"></div><div class="flower__grass__overlay"></div></div></div>
+                    
+                    <div class="grow-ans" style="--d:2.4s"><div class="flower__g-right flower__g-right--1"><div class="leaf"></div></div></div>
+                    <div class="grow-ans" style="--d:2.8s"><div class="flower__g-right flower__g-right--2"><div class="leaf"></div></div></div>
+                    <div class="grow-ans" style="--d:2.8s"><div class="flower__g-front"><div class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--1"><div class="flower__g-front__leaf"></div></div><div class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--2"><div class="flower__g-front__leaf"></div></div><div class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--3"><div class="flower__g-front__leaf"></div></div><div class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--4"><div class="flower__g-front__leaf"></div></div><div class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--5"><div class="flower__g-front__leaf"></div></div><div class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--6"><div class="flower__g-front__leaf"></div></div><div class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--7"><div class="flower__g-front__leaf"></div></div><div class="flower__g-front__leaf-wrapper flower__g-front__leaf-wrapper--8"><div class="flower__g-front__leaf"></div></div><div class="flower__g-front__line"></div></div></div>
+                    <div class="grow-ans" style="--d:3.2s"><div class="flower__g-fr"><div class="leaf"></div><div class="flower__g-fr__leaf flower__g-fr__leaf--1"></div><div class="flower__g-fr__leaf flower__g-fr__leaf--2"></div><div class="flower__g-fr__leaf flower__g-fr__leaf--3"></div><div class="flower__g-fr__leaf flower__g-fr__leaf--4"></div><div class="flower__g-fr__leaf flower__g-fr__leaf--5"></div><div class="flower__g-fr__leaf flower__g-fr__leaf--6"></div><div class="flower__g-fr__leaf flower__g-fr__leaf--7"></div><div class="flower__g-fr__leaf flower__g-fr__leaf--8"></div></div></div>
+                    
+                    <div class="long-g long-g--0"><div class="grow-ans" style="--d:3s"><div class="leaf leaf--0"></div></div><div class="grow-ans" style="--d:2.2s"><div class="leaf leaf--1"></div></div><div class="grow-ans" style="--d:3.4s"><div class="leaf leaf--2"></div></div><div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div></div>
+                    <div class="long-g long-g--1"><div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--0"></div></div><div class="grow-ans" style="--d:3.8s"><div class="leaf leaf--1"></div></div><div class="grow-ans" style="--d:4s"><div class="leaf leaf--2"></div></div><div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--3"></div></div></div>
+                    <div class="long-g long-g--2"><div class="grow-ans" style="--d:4s"><div class="leaf leaf--0"></div></div><div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--1"></div></div><div class="grow-ans" style="--d:4.4s"><div class="leaf leaf--2"></div></div><div class="grow-ans" style="--d:4.6s"><div class="leaf leaf--3"></div></div></div>
+                    <div class="long-g long-g--3"><div class="grow-ans" style="--d:4s"><div class="leaf leaf--0"></div></div><div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--1"></div></div><div class="grow-ans" style="--d:3s"><div class="leaf leaf--2"></div></div><div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div></div>
+                    <div class="long-g long-g--4"><div class="grow-ans" style="--d:4s"><div class="leaf leaf--0"></div></div><div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--1"></div></div><div class="grow-ans" style="--d:3s"><div class="leaf leaf--2"></div></div><div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div></div>
+                    <div class="long-g long-g--5"><div class="grow-ans" style="--d:4s"><div class="leaf leaf--0"></div></div><div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--1"></div></div><div class="grow-ans" style="--d:3s"><div class="leaf leaf--2"></div></div><div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div></div>
+                    <div class="long-g long-g--6"><div class="grow-ans" style="--d:4.2s"><div class="leaf leaf--0"></div></div><div class="grow-ans" style="--d:4.4s"><div class="leaf leaf--1"></div></div><div class="grow-ans" style="--d:4.6s"><div class="leaf leaf--2"></div></div><div class="grow-ans" style="--d:4.8s"><div class="leaf leaf--3"></div></div></div>
+                    <div class="long-g long-g--7"><div class="grow-ans" style="--d:3s"><div class="leaf leaf--0"></div></div><div class="grow-ans" style="--d:3.2s"><div class="leaf leaf--1"></div></div><div class="grow-ans" style="--d:3.5s"><div class="leaf leaf--2"></div></div><div class="grow-ans" style="--d:3.6s"><div class="leaf leaf--3"></div></div></div>
+                </div>
+
+                <div class="bubbles">
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                    <div class="bubble"><svg class="heart" viewBox="0 0 32 32"><path d="M23.6 2c-3.363 0-6.258 2.736-7.599 5.594-1.342-2.858-4.237-5.594-7.601-5.594-4.637 0-8.4 3.764-8.4 8.401 0 9.433 9.516 11.906 16.001 21.232 6.13-9.268 15.999-12.1 15.999-21.232 0-4.637-3.763-8.401-8.4-8.401z"></path></svg></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- BOTÓN SIGUIENTE -->
+    <button class="btn-glow" id="btn-next" onclick="nextSlide()">
+        <span>Siguiente</span>
+        <i data-lucide="arrow-right" class="w-6 h-6"></i>
+    </button>
+
+    <script>
+        lucide.createIcons();
+
+        // --- 1. SAKURAS FLOTANTES ---
+        function createSakura() {
+            const container = document.getElementById('sakura-container');
+            const el = document.createElement('div');
+            el.classList.add('sakura');
+            const size = Math.random() * 12 + 6 + 'px';
+            el.style.width = size; el.style.height = size;
+            el.style.left = Math.random() * 100 + 'vw';
+            el.style.animationDuration = Math.random() * 5 + 8 + 's';
+            el.style.animationDelay = Math.random() * 2 + 's';
+            container.appendChild(el);
+            setTimeout(() => el.remove(), 14000);
+        }
+        setInterval(createSakura, 500);
+
+        // --- 2. ÁRBOL MÁGICO (Canvas Slide 1) ---
+        const canvas = document.getElementById('treeCanvas');
+        const ctx = canvas.getContext('2d');
+        const dpr = window.devicePixelRatio || 1;
+        canvas.width = 600 * dpr; canvas.height = 600 * dpr;
+        ctx.scale(dpr, dpr);
+        
+        let particles = [];
+        const centerX = 300; const trunkBaseY = 600; const trunkHeight = 280;
+        let animationTime = 0;
+
+        function initTree() {
+            particles = [];
+            for(let i=0; i<600; i++) { 
+                const t = Math.random() * Math.PI * 2;
+                const r = Math.pow(Math.random(), 0.6);
+                let x = 16 * Math.pow(Math.sin(t), 3);
+                let y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t));
+                const targetX = centerX + x * 12.5 * r;
+                const targetY = (trunkBaseY - trunkHeight) + y * 12.5 * r - 40; 
+                particles.push({
+                    x: centerX, y: trunkBaseY, targetX: targetX, targetY: targetY,
+                    speed: 0.003 + Math.random() * 0.008, delay: Math.random() * 180,
+                    size: Math.random() * 7 + 3, color: `hsl(${335 + Math.random()*40}, ${75 + Math.random()*25}%, ${55 + Math.random()*30}%)`,
+                    progress: 0, wobble: Math.random() * Math.PI * 2, spiralDir: Math.random() > 0.5 ? 1 : -1
+                });
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, 600, 600);
+            animationTime++;
+            let trunkProgress = Math.min(animationTime / 150, 1);
+            if (trunkProgress > 0) {
+                ctx.save(); ctx.beginPath();
+                const wBase = 20 * trunkProgress; const wTop = 2 * trunkProgress;
+                ctx.moveTo(centerX - wBase, trunkBaseY);
+                ctx.quadraticCurveTo(centerX - wBase/2, trunkBaseY - trunkHeight/2, centerX - wTop, trunkBaseY - trunkHeight * trunkProgress);
+                ctx.lineTo(centerX + wTop, trunkBaseY - trunkHeight * trunkProgress);
+                ctx.quadraticCurveTo(centerX + wBase/2, trunkBaseY - trunkHeight/2, centerX + wBase, trunkBaseY);
+                const grad = ctx.createLinearGradient(centerX, trunkBaseY, centerX, trunkBaseY - trunkHeight);
+                grad.addColorStop(0, '#5d4037'); grad.addColorStop(1, '#8d6e63');
+                ctx.fillStyle = grad; ctx.fill(); ctx.restore();
+            }
+            if (trunkProgress > 0.2) { 
+                particles.forEach(p => {
+                    if (animationTime > p.delay) {
+                        if (p.progress < 1) {
+                            p.progress += p.speed;
+                            const ease = 1 - Math.pow(1 - p.progress, 3);
+                            const spiral = Math.sin(p.progress * 3 * Math.PI + p.wobble) * 15 * (1 - ease) * p.spiralDir;
+                            p.x = centerX + (p.targetX - centerX) * ease + spiral;
+                            p.y = trunkBaseY - (trunkBaseY - p.targetY) * ease;
+                            const scale = Math.min(p.progress * 3, 1) * p.size;
+                            drawHeart(p.x, p.y, scale, p.color);
+                        } else {
+                            const floatX = p.targetX + Math.sin(animationTime * 0.02 + p.wobble) * 2;
+                            const floatY = p.targetY + Math.cos(animationTime * 0.02 + p.wobble) * 2;
+                            drawHeart(floatX, floatY, p.size, p.color);
+                        }
+                    }
+                });
+            }
+            requestAnimationFrame(animate);
+        }
+
+        function drawHeart(x, y, size, color) {
+            ctx.fillStyle = color; ctx.beginPath(); ctx.moveTo(x, y);
+            ctx.bezierCurveTo(x - size/2, y - size/2, x - size, y + size/3, x, y + size);
+            ctx.bezierCurveTo(x + size, y + size/3, x + size/2, y - size/2, x, y);
+            ctx.fill();
+        }
+
+        initTree();
+        animate();
+
+        // --- 3. NAVEGACIÓN ---
+        let currentSlide = 1;
+        const totalSlides = 5;
+
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                const curr = document.getElementById(`slide-${currentSlide}`);
+                curr.classList.remove('active');
+                curr.classList.add('exit');
+                
+                currentSlide++;
+                
+                const next = document.getElementById(`slide-${currentSlide}`);
+                next.classList.remove('exit');
+                next.classList.add('active');
+
+                if (currentSlide === totalSlides) {
+                    document.getElementById('btn-next').style.display = 'none';
+                    // Activar la animación de flores en el slide final
+                    setTimeout(() => {
+                        document.getElementById('flower-wrapper').classList.remove('container');
+                    }, 100);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

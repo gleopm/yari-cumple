@@ -750,5 +750,17 @@
             }
         }
     </script>
+        <audio id="musica" loop>
+            <source src="Demorado3_30.mp3" type="audio/mpeg">
+        </audio>
+
+        <script>
+        const audio = document.getElementById("musica");
+
+        // Reproducir al primer clic
+        document.addEventListener("click", () => {
+            audio.play();
+        }, { once: true });
+        </script>
 </body>
 </html>
